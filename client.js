@@ -86,10 +86,9 @@ var client = function(client_sec_key_base64, client_sec_key_password, ca_cert, n
 
   client.connect = function(host, port, session_callback_f, session_close_callback_f) {
     var client_options = {
-      // TODO: Fill in options
-      ca: null,
-      host: null,
-      port: null,
+      ca: ca_cert,
+      host: host,
+      port: port,
       rejectUnauthorized: true
     };
     

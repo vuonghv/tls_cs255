@@ -111,10 +111,9 @@ var server = function(server_key, server_key_password, server_cert, client_pub_k
 
   server.start = function(port) {
     var server_options = {
-      // TODO: initialize TLS server options
-      key: null,
-      cert: null,
-      passphrase: null
+      key: server_key,
+      cert: server_cert,
+      passphrase: server_key_password
     };
 
     tls_server = tls.createServer(server_options, on_connect);
