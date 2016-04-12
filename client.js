@@ -40,6 +40,43 @@ var client = function(client_sec_key_base64, client_sec_key_password, ca_cert, n
 
   function check_cert(crt) {
     // TODO: implement the X.509 certificate checks
+    if (!('valid_from' in crt &&
+          'valid_to' in crt &&
+          'issuer' in crt &&
+          'subject' in crt &&
+          'fingerprint' in crt)) {
+      protocol_abort();
+      return false;
+    }
+
+    var valid_from = new Date(crt.valid_from);
+    var valid_to = new Date(crt.valid_to);
+    var today = new Date();
+
+    if ((today <= valid_from) || (today >= valid_to)) {
+      protocol_abort();
+      return false;
+    }
+
+    var seven_day_after = new Date(today.getTime());
+    seven_day_after.setDate(seven_day_after.getDate() + 7);
+    if (seven_day_after >= valid_to) {
+      protocol_abort();
+      return false;
+    }
+
+    var subject = crt.subject;
+    if (!(subject['C'] === 'US' &&
+          subject['ST'] === 'CA' &&
+          subject['L'] === 'Stanford' &&
+          subject['O'] === 'CS 255' &&
+          subject['OU'] === 'Project 3' &&
+          subject['CN'] === 'localhost' &&
+          subject['emailAddress'] ==='cs255ta@cs.stanford.edu')) {
+      protocol_abort();
+      return false;
+    }
+
     return true;
   }
 
