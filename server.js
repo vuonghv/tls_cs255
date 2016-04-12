@@ -50,7 +50,9 @@ var server = function(server_key, server_key_password, server_cert, client_pub_k
         protocol_state = 'ABORT';
         var response_correct = false;
         // TODO: check challenge response
-        response_correct = true;
+        var challenge = get_new_challenge();
+        var signature = data.message;
+        response_correct = lib.ECDSA_verify(client_pub_key, challenge, signature);
         if (response_correct) {
           server_log('authentication succeeded')
           lib.send_message(socket, TYPE['SUCCESS'], '');

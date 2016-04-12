@@ -53,7 +53,9 @@ var client = function(client_sec_key_base64, client_sec_key_password, ca_cert, n
         }
         protocol_state = 'CHALLENGE';
         // TODO: respond to challenge
-        lib.send_message(socket, TYPE['RESPONSE'], 'blue');
+        var challenge = data.message;
+        signature = lib.ECDSA_sign(client_sec_key, challenge);
+        lib.send_message(socket, TYPE['RESPONSE'], signature);
         break;
 
       case TYPE['SESSION_MESSAGE']:
@@ -91,6 +93,8 @@ var client = function(client_sec_key_base64, client_sec_key_password, ca_cert, n
       port: port,
       rejectUnauthorized: true
     };
+
+    protocol_state = 'START';
     
     session_callback = session_callback_f;
     socket = tls.connect(port, client_options, function() {

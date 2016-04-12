@@ -29,7 +29,7 @@ server1.start(port);
 
 client1.connect('localhost', port, function() {
   client1.session_send('Hello World!');
-  client1.disconnect();
+  //client1.disconnect();
 }, function() {
   console.log('client disconnected');
 });
